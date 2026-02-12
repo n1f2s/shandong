@@ -6,21 +6,24 @@ interface HandProps {
   hand: HandEntity;
   guest: Guest;
   onClick: () => void;
+  tableRadius: number; // For dynamic reach distance
 }
 
-export const Hand: React.FC<HandProps> = ({ hand, guest, onClick }) => {
+export const Hand: React.FC<HandProps> = ({ hand, guest, onClick, tableRadius }) => {
   // Calculate position logic
   // The hand originates from the guest's position and moves towards the table center.
-  // We use the same angle logic as GuestSeat but interpolate distance based on state.
-
-  const maxRadius = 200; // Start position (near guest)
-  const minRadius = 100; // End position (at dish)
+  
+  // Max Radius: Guest Position (approx tableRadius + 60)
+  // Min Radius: Dish Position (approx tableRadius * 0.7)
+  
+  const maxRadius = tableRadius + 40; // Slightly inside the guest circle
+  const minRadius = tableRadius * 0.7; // At the dish
   
   let currentRadius = maxRadius;
   
   if (hand.state === 'reaching') {
-     // Animate in
-     currentRadius = 120;
+     // Animate in - about halfway?
+     currentRadius = (maxRadius + minRadius) / 2;
   } else if (hand.state === 'grabbing') {
      currentRadius = minRadius;
   } else {

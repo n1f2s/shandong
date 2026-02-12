@@ -49,17 +49,18 @@ export const ToastHUD: React.FC<ToastHUDProps> = ({ fillLevel, onPourStart, onPo
 
   return (
     <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 pointer-events-none z-40 w-full max-w-lg px-4">
-        <div className="pointer-events-auto bg-black/60 backdrop-blur-xl border-2 border-white/10 rounded-3xl p-6 pb-2 flex flex-col items-center shadow-2xl w-full">
+        <div className="pointer-events-auto p-6 pb-2 flex flex-col items-center w-full">
             
-            {/* Status Text */}
-            <div className={`text-sm font-bold ${statusColor} uppercase tracking-widest mb-4 transition-colors duration-300`}>
-                {statusText}
-            </div>
-
             <div className="flex items-end justify-center gap-16 relative w-full h-40">
                 
                 {/* 1. THE CUP (Left Target) */}
                 <div className="relative flex flex-col items-center z-10">
+                    
+                    {/* Status Text - Positioned absolute above the cup */}
+                    <div className={`absolute -top-12 w-48 text-center text-sm font-bold ${statusColor} uppercase tracking-widest transition-colors duration-300 drop-shadow-md whitespace-nowrap`}>
+                        {statusText}
+                    </div>
+
                     <div 
                         className="relative w-14 h-20 bg-white/10 rounded-b-xl border-2 border-white/40 border-t-0 overflow-hidden cursor-pointer hover:border-white/60 transition-colors"
                         onClick={onDump}

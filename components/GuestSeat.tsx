@@ -8,12 +8,16 @@ interface GuestSeatProps {
   isActive: boolean; // Is currently eating
   onToastClick: (guestId: number) => void;
   onKickClick: (guestId: number) => void;
+  tableRadius: number; // Added to calculate dynamic position
 }
 
-export const GuestSeat: React.FC<GuestSeatProps> = ({ guest, isActive, onToastClick, onKickClick }) => {
+export const GuestSeat: React.FC<GuestSeatProps> = ({ guest, isActive, onToastClick, onKickClick, tableRadius }) => {
   // Position Calculation
-  const baseRadius = 220; 
-  const kickRadius = 800; // Fly far off screen
+  // Guests sit 60px outside the table edge. 
+  const gap = 35;
+  const baseRadius = tableRadius + gap;
+  const kickRadius = tableRadius * 3; // Fly far off screen relative to table size
+
   const isKicking = guest.state === GuestState.KICKING;
   
   const currentRadius = isKicking ? kickRadius : baseRadius;

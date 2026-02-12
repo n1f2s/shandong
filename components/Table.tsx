@@ -1,5 +1,4 @@
-import React from 'react';
-import { Dish } from '../types';
+import React, { useRef, useEffect, useState } from 'react';
 import { DISHES } from '../constants';
 import { Fish, Utensils } from 'lucide-react';
 
@@ -7,11 +6,36 @@ interface TableProps {
   rotation: number;
   onPointerDown: (e: React.PointerEvent) => void;
   isLocked: boolean; // Visual feedback if locked by NPC
+  onSizeChange?: (radius: number) => void;
 }
 
-export const Table: React.FC<TableProps> = ({ rotation, onPointerDown, isLocked }) => {
+export const Table: React.FC<TableProps> = ({ rotation, onPointerDown, isLocked, onSizeChange }) => {
+  const tableRef = useRef<HTMLDivElement>(null);
+  const [radius, setRadius] = useState(144); // Default to mobile size approx
+
+  useEffect(() => {
+    if (!tableRef.current) return;
+    
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry && entry.contentRect) {
+        const r = entry.contentRect.width / 2;
+        setRadius(r);
+        if (onSizeChange) {
+          onSizeChange(r);
+        }
+      }
+    });
+
+    observer.observe(tableRef.current);
+    return () => observer.disconnect();
+  }, [onSizeChange]);
+
+  // Dish positioning: 70% from center looks good for both sizes
+  const dishDistance = radius * 0.7; 
+
   return (
     <div 
+      ref={tableRef}
       className={`relative w-72 h-72 sm:w-96 sm:h-96 rounded-full shadow-2xl transition-shadow duration-300 ${isLocked ? 'shadow-red-500/50 cursor-not-allowed' : 'shadow-black/50 cursor-grab active:cursor-grabbing'}`}
       style={{
         transform: `rotate(${rotation}deg)`,
@@ -33,19 +57,13 @@ export const Table: React.FC<TableProps> = ({ rotation, onPointerDown, isLocked 
           key={dish.id}
           className="absolute top-1/2 left-1/2 w-16 h-16 sm:w-20 sm:h-20 -ml-8 -mt-8 sm:-ml-10 sm:-mt-10 flex flex-col items-center justify-center"
           style={{
-            transform: `rotate(${dish.angle}deg) translate(0, -110px) rotate(-${dish.angle}deg)`, // Keep dishes upright relative to table center? No, they rotate with table.
-            // Actually, let's let them rotate with the table, but the icon inside can be oriented.
-            // Correction: `translate(0, -110px)` moves it to the edge. The outer rotate positions it.
+            // Dynamic positioning based on table radius
+            transform: `rotate(${dish.angle}deg) translate(0, -${dishDistance}px) rotate(-${dish.angle}deg)`, 
           }}
         >
           <div className={`relative flex items-center justify-center w-full h-full rounded-full border-2 shadow-md ${dish.type === 'fish' ? 'bg-amber-100 border-amber-500' : 'bg-white border-gray-300'}`}>
             {dish.type === 'fish' ? (
                // The Fish Head needs to be visually distinct direction-wise. 
-               // Assuming 0 deg on the dish points "UP" (towards center) or "OUT"?
-               // Let's say the Fish head points UP relative to the dish container.
-               // And the dish is at angle 0. 
-               // If table rotation is 0, dish 0 is at top (12 o'clock).
-               // We want Fish Head to point to 12 o'clock.
               <div className="flex flex-col items-center justify-center">
                  {/* Arrow indicating head */}
                  <div className="w-0 h-0 border-l-[6px] border-l-transparent border-b-[10px] border-b-red-600 border-r-[6px] border-r-transparent mb-1"></div>

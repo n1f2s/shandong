@@ -21,6 +21,9 @@ export default function App() {
   const [isShaking, setIsShaking] = useState(false);
   
   const [cupFillLevel, setCupFillLevel] = useState(0);
+  
+  // Responsive Table Radius (Defaults to mobile approx 144)
+  const [tableRadius, setTableRadius] = useState(144);
 
   // -- Refs --
   const requestRef = useRef<number>(0);
@@ -616,6 +619,7 @@ export default function App() {
                     isActive={!!activeHand} 
                     onToastClick={handleGuestClick}
                     onKickClick={handleKickGuest}
+                    tableRadius={tableRadius}
                 />
              );
          })}
@@ -625,6 +629,7 @@ export default function App() {
                 rotation={rotation} 
                 onPointerDown={handlePointerDown} 
                 isLocked={hands.some(h => h.state === 'grabbing' || h.isNaughty)}
+                onSizeChange={setTableRadius}
             />
          </div>
 
@@ -637,6 +642,7 @@ export default function App() {
                     hand={hand} 
                     guest={guest} 
                     onClick={() => slapHand(hand.id)} 
+                    tableRadius={tableRadius}
                 />
              );
          })}
