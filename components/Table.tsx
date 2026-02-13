@@ -36,7 +36,7 @@ export const Table: React.FC<TableProps> = ({ rotation, onPointerDown, isLocked,
   return (
     <div 
       ref={tableRef}
-      className={`relative w-72 h-72 sm:w-96 sm:h-96 rounded-full shadow-2xl transition-shadow duration-300 ${isLocked ? 'shadow-red-500/50 cursor-not-allowed' : 'shadow-black/50 cursor-grab active:cursor-grabbing'}`}
+      className={`relative w-60 h-60 sm:w-96 sm:h-96 rounded-full shadow-2xl transition-shadow duration-300 ${isLocked ? 'shadow-red-500/50 cursor-not-allowed' : 'shadow-black/50 cursor-grab active:cursor-grabbing'}`}
       style={{
         transform: `rotate(${rotation}deg)`,
         touchAction: 'none' // Critical for handling gestures manually
@@ -67,7 +67,7 @@ export const Table: React.FC<TableProps> = ({ rotation, onPointerDown, isLocked,
               <div className="flex flex-col items-center justify-center">
                  {/* Arrow indicating head */}
                  <div className="w-0 h-0 border-l-[6px] border-l-transparent border-b-[10px] border-b-red-600 border-r-[6px] border-r-transparent mb-1"></div>
-                 <Fish className="w-8 h-8 text-red-600 fill-current" />
+                 <Fish className="w-8 h-8 text-red-600 fill-current -rotate-90" />
                  <span className="text-[10px] font-bold text-red-800 mt-1">鱼头</span>
               </div>
             ) : (
