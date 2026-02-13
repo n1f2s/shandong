@@ -127,7 +127,7 @@ export const ToastHUD: React.FC<ToastHUDProps> = ({ fillLevel, onPourStart, onPo
                     */}
                     {!imgError ? (
                         <img 
-                            src="/assets/maotai.png" 
+                            src="https://raw.githubusercontent.com/n1f2s/ShaDong-Master/main/maotai.png" 
                             alt="Moutai Bottle" 
                             className="w-full h-full object-contain drop-shadow-2xl pointer-events-none"
                             draggable={false}
