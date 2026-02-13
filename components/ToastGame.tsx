@@ -10,7 +10,8 @@ interface ToastHUDProps {
 
 export const ToastHUD: React.FC<ToastHUDProps> = ({ fillLevel, onPourStart, onPourEnd, onDump }) => {
   const [isPouring, setIsPouring] = useState(false);
-  const [imgError, setImgError] = useState(false);
+  const [imgSrc, setImgSrc] = useState("/assets/maotai.png");
+  const [useCssFallback, setUseCssFallback] = useState(false);
 
   // Determine visual state
   let statusText = "按住酒瓶倒酒";
@@ -121,17 +122,23 @@ export const ToastHUD: React.FC<ToastHUDProps> = ({ fillLevel, onPourStart, onPo
                     onContextMenu={(e) => e.preventDefault()}
                 >
                     {/* 
-                       Using GitHub Raw URL.
-                       If the image fails to load (e.g. wrong branch name or file path), 
-                       it falls back to a CSS-drawn bottle.
+                       Try loading local asset first.
+                       If fail, try remote URL.
+                       If fail, fallback to CSS bottle.
                     */}
-                    {!imgError ? (
+                    {!useCssFallback ? (
                         <img 
-                            src="/assets/maotai.png" 
+                            src={imgSrc} 
                             alt="Moutai Bottle" 
                             className="w-full h-full object-contain drop-shadow-2xl pointer-events-none"
                             draggable={false}
-                            onError={() => setImgError(true)}
+                            onError={() => {
+                                if (imgSrc === "/assets/maotai.png") {
+                                    setImgSrc("https://raw.githubusercontent.com/n1f2s/ShaDong-Master/main/maotai.png");
+                                } else {
+                                    setUseCssFallback(true);
+                                }
+                            }}
                         />
                     ) : (
                         /* CSS Fallback Bottle */
